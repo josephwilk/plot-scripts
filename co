@@ -1,0 +1,14 @@
+#!/usr/local/bin/ruby -w
+files = [ARGV[0]]
+if ARGV.size > 1
+  files = ARGV
+end
+
+files.each {|file|
+  print(file+"\n")
+  new_file = file.gsub('png','pnm')
+  svg = new_file.gsub('pnm', 'svg')
+  `convert "#{file}" "#{new_file}"`
+  `potrace "#{new_file}" -s --alphamax 0 --unit 100 -o "#{svg}"`
+  `rm "#{new_file}"`
+}
