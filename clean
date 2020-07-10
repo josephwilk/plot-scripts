@@ -1,0 +1,21 @@
+#!/usr/local/bin/ruby -w
+dir = ARGV[0]
+
+if File.directory?(dir)
+  files = Dir.glob("#{dir}/*.svg")
+  `mkdir "#{dir}/out"`
+else
+  files = [dir]
+end
+
+files.each{|file|
+  begin
+    out_file = file.split("/")[-1]
+    `rm #{dir}/out/#{out_file}`
+    `cp #{file} #{dir}/out/#{out_file}`
+    `sed -ir "/rect/d" #{dir}/out/#{out_file}`
+    `vpype read #{dir}/out/#{out_file} scale --keep-proportions --to 18cm 18cm write --page-format a4 --center #{dir}/out/#{out_file}`
+    `rm #{dir}/out/#{out_file}r`
+  rescue
+  end
+  }
